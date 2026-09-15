@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "focusshell"
+version = "0.1.0.dev0"
+description = "An unofficial Linux desktop shell for Brain.fm"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [
+  { name = "Mika Flowers" }
+]
+
+# GTK, Libadwaita, PyGObject, and WebKitGTK are native system dependencies.
+# Keeping them out of pip avoids mixing Python wheels with the distro GTK stack.
+dependencies = []
+
+[project.scripts]
+focusshell = "focusshell.__main__:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
