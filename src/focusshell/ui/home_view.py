@@ -110,10 +110,6 @@ class HomeView(Gtk.ScrolledWindow):
     def _activity_row(self, title: str, subtitle: str) -> Adw.ActionRow:
         row = Adw.ActionRow(title=title, subtitle=subtitle)
         row.set_activatable(True)
-
-        arrow = Gtk.Image.new_from_icon_name("go-next-symbolic")
-        row.add_suffix(arrow)
-        row.set_activatable_widget(arrow)
+        row.add_suffix(Gtk.Image.new_from_icon_name("go-next-symbolic"))
         row.connect("activated", lambda _row: self._on_open_brainfm())
-
         return row
