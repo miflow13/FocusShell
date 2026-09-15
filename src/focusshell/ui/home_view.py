@@ -12,15 +12,21 @@ gi.require_version("Gtk", "4.0")
 from gi.repository import Adw, Gtk  # noqa: E402
 
 
-class HomeView(Gtk.ScrolledWindow):
+class HomeView(Gtk.Box):
     """FocusShell-owned landing page shown before the Brain.fm service view."""
 
     def __init__(self, on_open_brainfm: Callable[[], None]) -> None:
-        super().__init__()
+        super().__init__(orientation=Gtk.Orientation.VERTICAL)
         self._on_open_brainfm = on_open_brainfm
 
-        self.set_hscrollbar_policy(Gtk.PolicyType.NEVER)
+        self.set_hexpand(True)
         self.set_vexpand(True)
+
+        scroller = Gtk.ScrolledWindow()
+        scroller.set_hscrollbar_policy(Gtk.PolicyType.NEVER)
+        scroller.set_hexpand(True)
+        scroller.set_vexpand(True)
+        self.append(scroller)
 
         clamp = Adw.Clamp()
         clamp.set_maximum_size(760)
@@ -28,13 +34,13 @@ class HomeView(Gtk.ScrolledWindow):
         clamp.set_margin_bottom(48)
         clamp.set_margin_start(24)
         clamp.set_margin_end(24)
+        scroller.set_child(clamp)
 
         content = Gtk.Box(
             orientation=Gtk.Orientation.VERTICAL,
             spacing=28,
         )
         clamp.set_child(content)
-        self.set_child(clamp)
 
         title = Gtk.Label(label="Ready to focus?")
         title.set_halign(Gtk.Align.START)
