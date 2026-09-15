@@ -5,16 +5,21 @@ from __future__ import annotations
 import gi
 
 gi.require_version("Adw", "1")
-gi.require_version("Gtk", "4.0")
 
-from gi.repository import Adw, Gtk  # noqa: E402
+gif = gi.require_version
+# Keep GTK version declaration explicit for PyGObject before importing widgets.
+gif("Gtk", "4.0")
+
+from gi.repository import Adw  # noqa: E402
 
 from focusshell.config import APP_NAME
 from focusshell.providers.base import PlaybackProvider
+from focusshell.ui.home_view import HomeView
+from focusshell.ui.service_view import ServiceView
 
 
 class FocusShellWindow(Adw.ApplicationWindow):
-    """Compose native window chrome around a playback provider."""
+    """Compose FocusShell-owned navigation around a playback provider."""
 
     def __init__(
         self,
@@ -27,19 +32,22 @@ class FocusShellWindow(Adw.ApplicationWindow):
         self.set_title(APP_NAME)
         self.set_default_size(1180, 780)
 
-        toolbar = Adw.ToolbarView()
-        header = Adw.HeaderBar()
+        self._navigation = Adw.NavigationView()
 
-        reload_button = Gtk.Button.new_from_icon_name("view-refresh-symbolic")
-        reload_button.set_tooltip_text("Reload Brain.fm")
-        reload_button.connect("clicked", self._on_reload_clicked)
-        header.pack_end(reload_button)
+        home_view = HomeView(on_open_brainfm=self._open_brainfm)
+        self._home_page = Adw.NavigationPage.new(home_view, APP_NAME)
+        self._home_page.set_tag("home")
 
-        toolbar.add_top_bar(header)
-        toolbar.set_content(provider.widget)
-        self.set_content(toolbar)
+        service_view = ServiceView(provider)
+        self._service_page = Adw.NavigationPage.new(service_view, "Brain.fm")
+        self._service_page.set_tag("brainfm")
 
+        # The first statically added page becomes the root page automatically.
+        self._navigation.add(self._home_page)
+        self._navigation.add(self._service_page)
+
+        self.set_content(self._navigation)
+
+    def _open_brainfm(self) -> None:
         self._provider.start()
-
-    def _on_reload_clicked(self, _button: Gtk.Button) -> None:
-        self._provider.reload()
+        self._navigation.push(self._service_page)
