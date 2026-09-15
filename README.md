@@ -6,7 +6,7 @@ The goal is not to clone Brain.fm's official desktop application. FocusShell use
 mental model—choose what you want to do, start a session, keep playback out of your way—but gives
 that workflow its own Linux-native interface and integration.
 
-> **Status:** pre-alpha / architecture spike. FocusShell is not affiliated with or endorsed by
+> **Status:** pre-alpha / core-shell development. FocusShell is not affiliated with or endorsed by
 > Brain.fm. It does not redistribute Brain.fm audio or bundled service content. A valid Brain.fm
 > account/subscription may be required by the service.
 
@@ -32,17 +32,24 @@ See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) and [`docs/ROADMAP.md`](docs/
 
 ## Development
 
-Native dependencies are intentionally not hidden inside pip. On Fedora, install GTK 4, Libadwaita,
-WebKitGTK 6, and PyGObject from the system package manager, then install FocusShell editable:
+Native dependencies are intentionally not hidden inside pip. On Fedora 44:
 
 ```bash
-python -m venv .venv --system-site-packages
+sudo dnf install python3-gobject gtk4 libadwaita webkitgtk6.0
+```
+
+Create an editable development environment using the system GI bindings:
+
+```bash
+python3 -m venv .venv --system-site-packages
 source .venv/bin/activate
 pip install -e .
 python -m focusshell
 ```
 
-Exact Fedora package names will be documented once the first runtime spike is verified.
+The production WebKit profile is stored separately from the compatibility spike under the normal
+XDG data/cache directories, so validating the real application does not depend on the spike's saved
+session.
 
 ## Design rule
 
