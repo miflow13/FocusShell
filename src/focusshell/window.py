@@ -5,10 +5,7 @@ from __future__ import annotations
 import gi
 
 gi.require_version("Adw", "1")
-
-gif = gi.require_version
-# Keep GTK version declaration explicit for PyGObject before importing widgets.
-gif("Gtk", "4.0")
+gi.require_version("Gtk", "4.0")
 
 from gi.repository import Adw  # noqa: E402
 
