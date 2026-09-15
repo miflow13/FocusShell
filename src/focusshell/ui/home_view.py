@@ -23,7 +23,7 @@ class HomeView(Gtk.Box):
         self.set_vexpand(True)
 
         scroller = Gtk.ScrolledWindow()
-        scroller.set_hscrollbar_policy(Gtk.PolicyType.NEVER)
+        scroller.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         scroller.set_hexpand(True)
         scroller.set_vexpand(True)
         self.append(scroller)
